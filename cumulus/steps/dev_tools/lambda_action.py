@@ -26,10 +26,8 @@ class LambdaAction(step.Step):
                  user_parameters=None,
                  ):
         """
-        :type buildspec: basestring path to buildspec.yml or text containing the buildspec.
-        :type input_artifact_name: basestring The artifact name in the pipeline. Must contain a buildspec.yml
         :type action_name: basestring Displayed on the console
-        :type environment: troposphere.codebuild.Environment Optional if you need ENV vars or a different build.
+        :type input_artifact_name: basestring The artifact name in the pipeline. Must contain a buildspec.yml
         :type vpc_config.Vpc_Config: Only required if the codebuild step requires access to the VPC
         """
         step.Step.__init__(self)
