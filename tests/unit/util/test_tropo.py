@@ -86,17 +86,6 @@ class TestPipelineStep(unittest.TestCase):
             "thebucket"
         ))
 
-        self.assertRaises(
-            ValueError,
-            TemplateQuery.get_resource_by_type,
-            template=t,
-            type_to_find=troposphere.s3.Policy
-        )
+        result = TemplateQuery.get_resource_by_type(t, troposphere.s3.Policy)
 
-        self.assertRaisesRegexp(
-            ValueError,
-            "Expected to find.+of type.+Policy",
-            callable_obj=TemplateQuery.get_resource_by_type,
-            template=t,
-            type_to_find=troposphere.s3.Policy
-        )
+        self.assertEqual(result.count(result), 0, msg="Expected to find zero resources in the template")
