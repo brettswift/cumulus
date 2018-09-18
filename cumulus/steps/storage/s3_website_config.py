@@ -6,7 +6,7 @@ from cumulus.chain import step
 from cumulus.chain import chaincontext
 
 
-class S3BucketWebsiteConfig(step.Step):
+class StaticWebsiteConfig(step.Step):
 
     def __init__(self,
                  index_doc='index.html',
@@ -40,7 +40,7 @@ class S3BucketWebsiteConfig(step.Step):
             'IndexDocument': self.index_doc,
             'ErrorDocument': self.error_doc
         }
-        
+
 
 
     @staticmethod
