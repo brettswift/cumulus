@@ -4,6 +4,7 @@ import awacs.logs
 import awacs.iam
 import awacs.s3
 import awacs.ecr
+import troposphere
 
 from troposphere import iam
 

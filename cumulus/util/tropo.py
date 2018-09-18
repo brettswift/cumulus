@@ -22,8 +22,8 @@ class TemplateQuery:
             if item.__class__ is type_to_find:
                 result.append(item)
 
-        if len(result) == 0:
-            raise ValueError("Expected to find resource of type %s in template but did not." % type_to_find)
+        # if len(result) == 0:
+        #     raise ValueError("Expected to find resource of type %s in template but did not." % type_to_find)
         return result
 
     @staticmethod

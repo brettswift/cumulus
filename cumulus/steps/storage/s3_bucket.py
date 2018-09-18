@@ -1,8 +1,8 @@
 import troposphere
-from troposphere import s3
+from troposphere import s3  # noqa
 
-from cumulus.chain import step
-from cumulus.chain import chaincontext
+from cumulus.chain import step   # noqa
+from cumulus.chain import chaincontext   # noqa
 
 
 class S3Bucket(step.Step):
