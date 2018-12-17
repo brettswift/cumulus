@@ -23,9 +23,13 @@ class PipelineSourceAction(step.Step):
                  action_name,
                  output_artifact_name,
                  s3_bucket_name,
-                 s3_object_key
+                 s3_object_key,
+                 poll_for_source_changes=None,
                  ):
         """
+        :type poll_for_source_changes: None or boolean - not setting this seems to have a different behaviour
+                                                         than setting it to false.  To not have the pipeline trigger by s3 state changes
+                                                          set this to False.  For normal S3 triggering, do not set this.
         :type s3_object_key: basestring Path of the artifact in the bucket.
         :type s3_bucket_name: basestring or troposphere.Ref Object of the bucket name.
         :type input_artifact_name: basestring The artifact name in the pipeline.
@@ -35,6 +39,7 @@ class PipelineSourceAction(step.Step):
         :type vpc_config.Vpc_Config: Only required if the codebuild step requires access to the VPC
         """
         step.Step.__init__(self)
+        self.poll_for_source_changes = poll_for_source_changes
         self.s3_object_key = s3_object_key
         self.s3_bucket_name = s3_bucket_name
         self.output_artifact_name = output_artifact_name
@@ -80,9 +85,14 @@ class PipelineSourceAction(step.Step):
             ],
             Configuration={
                 "S3Bucket": self.s3_bucket_name,
-                "S3ObjectKey": self.s3_object_key
+                "S3ObjectKey": self.s3_object_key,
             },
         )
+
+        # TODO: support CFN params here. Use conditionals. Set to NoValue instead of None, using the same logic as below
+        if self.poll_for_source_changes is not None:
+            # if it's none - we shouldn't touch this.
+            source_action.Configuration['PollForSourceChanges'] = self.poll_for_source_changes
 
         template.add_resource(codebuild_role)
 
