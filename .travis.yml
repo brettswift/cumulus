@@ -5,6 +5,7 @@ python:
 install:
 - pip install -e .
 - pip install .[test]
+- pip freeze
 script:
 - py.test -s tests/unit --color=yes -v
 - flake8 cumulus tests

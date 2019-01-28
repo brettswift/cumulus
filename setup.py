@@ -26,7 +26,6 @@ test_requirements = [
     'stacker',
     'flake8',
     'pytest-watch',
-    'pytest-cov',
     'coveralls',
     'awscli',
     'mock',

@@ -46,7 +46,6 @@ class LaunchConfig(step.Step):
 
         launch_config_security_group = ec2.SecurityGroup(
             sg_name,
-            GroupName=sg_name,
             GroupDescription=sg_name,
             **self._get_security_group_parameters(sg_name)
         )

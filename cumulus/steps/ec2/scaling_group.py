@@ -12,12 +12,13 @@ class ScalingGroup(step.Step):
 
     def __init__(self,
                  use_update_policy=True,
+                 name='ScalingGroup'
                  ):
-        """
-        :type launch_type: LaunchType: the type of the ec2 that will be created
-        """
+
+        self.name = name
+
         step.Step.__init__(self,
-                           name='ScalingGroup')
+                           name=self.name)
 
         # Set default resource names for those not injected
         self.use_update_policy = use_update_policy
