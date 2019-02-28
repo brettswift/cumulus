@@ -44,9 +44,7 @@ def get_policy_cloudformation_general_access(policy_name):
                 awacs.aws.Statement(
                     Effect=awacs.aws.Allow,
                     Action=[
-                        awacs.logs.CreateLogGroup,
-                        awacs.logs.CreateLogStream,
-                        awacs.logs.PutLogEvents,
+                        awacs.aws.Action("logs", "*"),
                     ],
                     # TODO: restrict more accurately
                     Resource=["*"]
