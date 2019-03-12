@@ -24,8 +24,10 @@ class LambdaAction(step.Step):
                  stage_name_to_add,
                  function_name,
                  user_parameters=None,
+                 is_parallel_task=False,
                  ):
         """
+        :type is_parallel_task: bool determines if the task is added in serial (default) or parallel
         :type action_name: basestring Displayed on the console
         :type input_artifact_name: basestring The artifact name in the pipeline. Must contain a buildspec.yml
         :type vpc_config.Vpc_Config: Only required if the codebuild step requires access to the VPC
@@ -36,6 +38,7 @@ class LambdaAction(step.Step):
         self.input_artifact_name = input_artifact_name
         self.action_name = action_name
         self.stage_name_to_add = stage_name_to_add
+        self.is_parallel_task = is_parallel_task
 
     def handle(self, chain_context):
 
@@ -90,6 +93,8 @@ class LambdaAction(step.Step):
         )
 
         # TODO accept a parallel action to the previous action, and don't +1 here.
-        next_run_order = len(stage.Actions) + 1
+        last_run_order = len(stage.Actions)
+        next_run_order = last_run_order if self.is_parallel_task else last_run_order + 1
+
         lambda_action.RunOrder = next_run_order
         stage.Actions.append(lambda_action)
