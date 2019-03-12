@@ -26,6 +26,8 @@ class CodeBuildAction(step.Step):
                  action_name,
                  stage_name_to_add,
                  input_artifact_name,
+                 output_artifact_name=None,
+                 is_parallel_task=False,
                  environment=None,
                  vpc_config=None,
                  buildspec='buildspec.yml',
@@ -35,7 +37,9 @@ class CodeBuildAction(step.Step):
         :type prefix: basestring name to make the project unique
         :type buildspec: basestring path to buildspec.yml or text containing the buildspec.
         :type input_artifact_name: basestring The artifact name in the pipeline. Must contain a buildspec.yml
+        :type output_artifact_name: basestring The artifact name in the pipeline. Must contain a buildspec.yml
         :type action_name: basestring Displayed on the console
+        :type is_parallel_task: bool determines if the task is added in serial (default) or parallel
         :type environment: troposphere.codebuild.Environment Optional if you need ENV vars or a different build.
         :type vpc_config.Vpc_Config: Only required if the codebuild step requires access to the VPC
         :type stack_namespace: Stack namespace to generate a unique physical name to give the code build project
@@ -46,6 +50,8 @@ class CodeBuildAction(step.Step):
         self.buildspec = buildspec
         self.environment = environment
         self.input_artifact_name = input_artifact_name
+        self.output_artifact_name = output_artifact_name
+        self.is_parallel_task = is_parallel_task
         self.action_name = action_name
         self.vpc_config = vpc_config
         self.stage_name_to_add = stage_name_to_add
@@ -97,6 +103,9 @@ class CodeBuildAction(step.Step):
             RunOrder="1"
         )
 
+        if self.output_artifact_name:
+            code_build_action.OutputArtifacts = [codepipeline.OutputArtifacts(Name=self.output_artifact_name)]
+
         chain_context.template.add_resource(codebuild_role)
         chain_context.template.add_resource(project)
 
@@ -106,8 +115,8 @@ class CodeBuildAction(step.Step):
             stage_name=self.stage_name_to_add,
         )
 
-        # TODO accept a parallel action to the previous action, and don't +1 here.
-        next_run_order = len(stage.Actions) + 1
+        last_run_order = len(stage.Actions)
+        next_run_order = last_run_order if self.is_parallel_task else last_run_order + 1
         code_build_action.RunOrder = next_run_order
         stage.Actions.append(code_build_action)
 
