@@ -37,6 +37,7 @@ def get_policy_cloudformation_general_access(policy_name):
                         awacs.aws.Action("sqs", "*"),
                         awacs.aws.Action("events", "*"),
                         awacs.aws.Action("ecr", "*"),
+                        awacs.aws.Action("ssm", "Get*"),
                         awacs.iam.PassRole,
                     ],
                     Resource=["*"]
